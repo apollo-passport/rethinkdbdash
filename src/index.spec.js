@@ -7,8 +7,8 @@ import RethinkDBDashDriver from './index';
 
 const should = chai.should();
 
-const host = "172.17.0.2";
-//const host = process.env.RETHINKDB_HOST || '127.0.0.1';
+//const host = "172.17.0.2";
+const host = process.env.RETHINKDB_HOST || '127.0.0.1';
 const port = process.env.RETHINKDB_PORT || 28015;
 
 const connection = rethinkdbdash({
