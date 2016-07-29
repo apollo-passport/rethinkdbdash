@@ -1,7 +1,6 @@
 import chai from 'chai';
 import sinon from 'sinon';
 import 'regenerator-runtime/runtime';
-import _ from 'lodash';
 
 import rethinkdbdash from 'rethinkdbdash';
 import RethinkDBDashDriver from './index';
