@@ -15,6 +15,11 @@ module.exports = function(wallaby) {
 
     env: {
       type: 'node'
+    },
+
+    /* parallelism may break some tests due to db consistency */
+    workers: {
+      initial: 1, regular: 1
     }
   };
 };
