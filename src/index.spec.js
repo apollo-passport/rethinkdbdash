@@ -1,5 +1,6 @@
 import chai from 'chai';
 import sinon from 'sinon';
+import util from 'util';
 import 'regenerator-runtime/runtime';
 
 import rethinkdbdash from 'rethinkdbdash';
@@ -159,22 +160,69 @@ describe('apollo-passport-rethinkdbdash', () => {
 
       });
 
-      describe('fetchUserByServiceOrEmail', async () => {
+      describe('fetchUserByServiceIdOrEmail()', () => {
 
         it('matches by email', async () => {
-          const user = await db.fetchUserByServiceOrEmail('mckay@atlantis.net', 'facebook', "no-match");
+          const user = await db.fetchUserByServiceIdOrEmail('facebook', "no-match", 'mckay@atlantis.net');
           user.id.should.equal("mckay");
         });
 
         it('matches by service', async () => {
-          const user = await db.fetchUserByServiceOrEmail('non-matching-email', 'facebook', "1");
+          const user = await db.fetchUserByServiceIdOrEmail('facebook', "1", 'non-matching-email');
           user.id.should.equal("sheppard");
         });
 
         it('should return null on no match', async () => {
-          const user = await db.fetchUserByServiceOrEmail('no-email', 'no-service', 'no-id');
+          const user = await db.fetchUserByServiceIdOrEmail('no-service', 'no-id', 'no-email');
           should.equal(user, null);
         });
+
+      });
+
+      describe('assertUserEmailData()', () => {
+
+        it('adds a new email address', async () => {
+          await db.assertUserEmailData('mckay', 'mckay@sgc.mil');
+
+          const user = await db.fetchUserByEmail('mckay@sgc.mil');
+          should.exist(user);
+        });
+
+        it('updates/replaces an existing email address + data', async () => {
+          const email = 'mckay@atlantis.net';
+          await db.assertUserEmailData('mckay', email, { verified: true });
+
+          const user = await db.fetchUserByEmail(email);
+          const data = user.emails.find(data => data.address === email);
+          data.should.deep.equal({ address: email, verified: true });
+        });
+
+      });
+
+      describe('assertUserServiceData()', () => {
+
+        it('adds a new service record', async () => {
+          await db.assertUserServiceData('mckay', 'facebook', { id: '5' });
+
+          const user = await db.fetchUserByServiceIdOrEmail('facebook', '5', null);
+          user.services.facebook.id.should.equal('5');
+        });
+
+        it('updates/replaces an existing service record', async () => {
+          await db.assertUserServiceData('mckay', 'facebook', { id: '5' });
+
+          const user = await db.fetchUserByServiceIdOrEmail('facebook', '5', null);
+          user.services.facebook.id.should.equal('5');
+        });
+
+      });
+
+      if (0)
+      it('set/map user password', async () => {
+
+        const password = 'xxx';
+        await db.setUserPasswordData('mckay', { password });
+        //const user = 
 
       });
 

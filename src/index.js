@@ -116,14 +116,14 @@ class RethinkDBDashDriver {
     await this.ready();
 
     const results = await this.users
-      .filter(this.r.row('emails').contains({ address: email }))
+      .filter(this.r.row('emails').contains(row => row('address').eq(email)))
       .limit(1)
       .run();
 
     return results[0] || null;
   }
 
-  async fetchUserByServiceOrEmail(email, service, id) {
+  async fetchUserByServiceIdOrEmail(service, id, email) {
     await this.ready();
 
     const results = await this.users.filter(
@@ -136,14 +136,19 @@ class RethinkDBDashDriver {
     return results[0] || null;
   }
 
-  async addEmailAddressToUser(id, email) {
+  async assertUserEmailData(userId, email, data) {
     await this.ready();
 
+    await this.users.get(userId).update(row => ({
+      emails: row('emails').default([])
+        .filter(row('emails').default([]).contains({ address: email }).not())
+        .append({ address: email, ...data })
+    }));
   }
 
-  async assertServiceOnUser(id, service, data) {
+  async assertUserServiceData(userId, service, data) {
     await this.ready();
-
+    await this.users.get(userId).update({ services: { [service]: data } });
   }
 
   /* required by local strategy */
@@ -152,8 +157,8 @@ class RethinkDBDashDriver {
     return user && user.services && user.services.password;
   }
 
-  async setUserPasswordData(id, data) {
-    await this.assertServiceOnUser(id, 'password', data);
+  async setUserPasswordData(userId, data) {
+    await this.assertServiceOnUser(userId, 'password', data);
   }
 
 }
