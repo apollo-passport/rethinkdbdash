@@ -137,31 +137,32 @@ describe('apollo-passport-rethinkdbdash', () => {
 
     describe('fetching', () => {
 
+      const users = [
+        {
+          id: "sheppard",
+          emails: [
+            { address: "sheppard@atlantis.net" }
+          ],
+          services: {
+            facebook: {
+              id: "1"
+            }
+          }
+        },
+        {
+          id: "mckay",
+          emails: [
+            { address: "mckay@atlantis.net"}
+          ]
+        }
+      ];
+
       let r, db;
       before(async () => {
         r = await disposable();
         db = new RethinkDBDashDriver(r);
         await db.ready();
-   
-        await db.users.insert([
-          {
-            id: "sheppard",
-            emails: [
-              { address: "sheppard@atlantis.net" }
-            ],
-            services: {
-              facebook: {
-                id: "1"
-              }
-            }
-          },
-          {
-            id: "mckay",
-            emails: [
-              { address: "mckay@atlantis.net"}
-            ]
-          }
-        ]).run();
+        await db.users.insert(users).run();
       });
       after(async () => { r.dispose(); });
 
@@ -236,14 +237,9 @@ describe('apollo-passport-rethinkdbdash', () => {
 
       });
 
-      it('set/map user password', async () => {
-        const pdata1 = { password: 'xxx' };
-        await db.setUserPasswordData('mckay', pdata1);
-
-        const user = await db.fetchUserByEmail('mckay@atlantis.net');
-        const pdata2 = db.mapUserToPasswordData(user);
-
-        pdata1.should.deep.equal(pdata2);
+      it('mapUserToServiceData', () => {
+        const fb = db.mapUserToServiceData(users[0], 'facebook');
+        fb.should.deep.equal(users[0].services.facebook);
       });
 
     });

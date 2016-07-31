@@ -152,16 +152,9 @@ class RethinkDBDashDriver {
     await this.users.get(userId).update({ services: { [service]: data } });
   }
 
-  /* required by local strategy */
-
-  mapUserToPasswordData(user) {
-    return user && user.services && user.services.password;
+  mapUserToServiceData(user, service) {
+    return user && user.services && user.services[service];
   }
-
-  async setUserPasswordData(userId, data) {
-    await this.assertUserServiceData(userId, 'password', data);
-  }
-
 }
 
 export default RethinkDBDashDriver;
