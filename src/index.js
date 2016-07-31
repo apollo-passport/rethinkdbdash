@@ -11,7 +11,8 @@ class RethinkDBDashDriver {
     this.db = r.db(this.dbName);
 
     // don't await the init, run async
-    new Promise(resolve => this.init().then(resolve));
+    if (options.init !== false)
+      this.init();
   }
 
   async init() {
@@ -158,7 +159,7 @@ class RethinkDBDashDriver {
   }
 
   async setUserPasswordData(userId, data) {
-    await this.assertServiceOnUser(userId, 'password', data);
+    await this.assertUserServiceData(userId, 'password', data);
   }
 
 }

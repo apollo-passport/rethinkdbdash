@@ -8,7 +8,6 @@ import RethinkDBDashDriver from './index';
 
 const should = chai.should();
 
-//const host = "172.17.0.2";
 const host = process.env.RETHINKDB_HOST || '127.0.0.1';
 const port = process.env.RETHINKDB_PORT || 28015;
 
@@ -41,17 +40,37 @@ describe('apollo-passport-rethinkdbdash', () => {
   before(async () => { r = await disposable(); });
   after(async () => { await r.dispose(); });
 
+  // sufficiently tested by other tests for now
   describe('constructor()', () => {
 
-    it('stores r', async () => {
+    it('accepts options', () => {
+      const r = { db() {} };
+      const options = {
+        init: false,
+        userTableName: 'personnel'
+      };
+
+      const db = new RethinkDBDashDriver(r, options);
+      
+      db.userTableName.should.equal(options.userTableName);
     });
 
-    it('has defaults', async () => {
-    });
+  });
 
-    it('accepts options to ovveride defaults', async () => {
-    });
+  it('ready()', async () => {
+    const r = await disposable();
+    const db = new RethinkDBDashDriver(r);
+    const origDbReady = db.ready;
+    await db.ready();
 
+    // rather than rely on timing, let's just restore the original now
+    db.ready = origDbReady;
+    // and now db.initted==true and that branch is run
+    await db.ready();
+    // original function returns a promise, replaced returns undefined
+    should.equal(db.ready(), undefined);
+
+    await r.dispose();
   });
 
   it('config; database & local output', async () => {
@@ -217,13 +236,14 @@ describe('apollo-passport-rethinkdbdash', () => {
 
       });
 
-      if (0)
       it('set/map user password', async () => {
+        const pdata1 = { password: 'xxx' };
+        await db.setUserPasswordData('mckay', pdata1);
 
-        const password = 'xxx';
-        await db.setUserPasswordData('mckay', { password });
-        //const user = 
+        const user = await db.fetchUserByEmail('mckay@atlantis.net');
+        const pdata2 = db.mapUserToPasswordData(user);
 
+        pdata1.should.deep.equal(pdata2);
       });
 
     });
