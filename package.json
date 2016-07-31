@@ -6,9 +6,9 @@
   "scripts": {
     "compile": "babel -d lib/ src/",
     "prepublish": "npm run compile",
-    "test": "mocha --compilers js:babel-core/register \"src/**/*.spec.js\"",
-    "coverage": "istanbul cover _mocha -- --compilers js:babel-core/register \"src/**/*.spec.js\" -R spec",
-    "coveralls": "istanbul cover _mocha --report lcovonly -- --compilers js:babel-core/register \"src/**/*.spec.js\" -R spec && cat ./coverage/lcov.info | sed -r 's/SF:(.*)+(src\\/.*)\\2(.*)/SF:\\1\\2\\3/g' | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
+    "test": "mocha --compilers js:babel-core/register \"src/**/*.spec.js\" --timeout 5000",
+    "coverage": "istanbul cover _mocha -- --compilers js:babel-core/register \"src/**/*.spec.js\" -R spec --timeout 5000",
+    "coveralls": "istanbul cover _mocha --report lcovonly -- --compilers js:babel-core/register \"src/**/*.spec.js\" -R spec --timeout 5000 && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
   },
   "repository": {
     "type": "git",
