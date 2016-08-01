@@ -1,3 +1,5 @@
+import 'regenerator-runtime/runtime';
+
 class RethinkDBDashDriver {
 
   /*
@@ -96,6 +98,9 @@ class RethinkDBDashDriver {
 
   /*
    * Given a user record, save it to the database, and return its given id.
+   * NoSQL databases should store the entire object, schema-based databases
+   * should honor the 'emails' and 'services' keys and store as necessary
+   * in another table.
    */
   async createUser(user) {
     await this.ready();
