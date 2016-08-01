@@ -29,16 +29,12 @@ async function disposable() {
     await this.dbDrop(name).run();
   };
 
-  r._db = name;
+  r._poolMaster._options.db = name;
 
   return r;
 }
 
 describe('apollo-passport-rethinkdbdash', () => {
-
-  let r;
-  before(async () => { r = await disposable(); });
-  after(async () => { await r.dispose(); });
 
   // sufficiently tested by other tests for now
   describe('constructor()', () => {
@@ -98,6 +94,10 @@ describe('apollo-passport-rethinkdbdash', () => {
   describe('users', () => {
 
     describe('createUser()', () => {
+
+      let r;
+      before(async () => { r = await disposable(); });
+      after(async () => { await r.dispose(); });
 
       it('inserts a user and returns the id when no id given', async () => {
         const db = new RethinkDBDashDriver(r);

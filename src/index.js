@@ -9,7 +9,7 @@ class RethinkDBDashDriver {
     this.r = r;
     this.userTableName = options.userTableName || 'users';
     this.configTableName = options.configTalbeName || 'apolloPassportConfig';
-    this.dbName = options.dbName || r._db;
+    this.dbName = options.dbName || (r._poolMaster && r._poolMaster._options.db);
     this.db = r.db(this.dbName);
 
     // don't await the init, run async
