@@ -11,6 +11,7 @@ class RethinkDBDashDriver {
     this.configTableName = options.configTalbeName || 'apolloPassportConfig';
     this.dbName = options.dbName || (r._poolMaster && r._poolMaster._options.db);
     this.db = r.db(this.dbName);
+    this.readySubs = [];
 
     // don't await the init, run async
     if (options.init !== false)
@@ -26,22 +27,17 @@ class RethinkDBDashDriver {
 
     await this.fetchConfig.bind(this);
     this.initted = true;
+
+    while(this.readySubs.length)
+      this.readySubs.shift().call();
   }
 
   ready() {
     return new Promise((resolve) => {
-      if (this.initted) {
-        this.ready = function() {};
-        return resolve();
-      }
-
-      const interval = setInterval(() => {
-        if (this.initted) {
-          this.ready = function() {};
-          clearInterval(interval);
-          resolve();
-        }
-      }, 50);
+      if (this.initted)
+        resolve();
+      else
+        this.readySubs.push(resolve);
     });
   }
 

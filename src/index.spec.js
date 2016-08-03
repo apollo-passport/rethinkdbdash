@@ -59,12 +59,17 @@ describe('apollo-passport-rethinkdbdash', () => {
     const origDbReady = db.ready;
     await db.ready();
 
-    // rather than rely on timing, let's just restore the original now
-    db.ready = origDbReady;
-    // and now db.initted==true and that branch is run
-    await db.ready();
-    // original function returns a promise, replaced returns undefined
-    should.equal(db.ready(), undefined);
+    // now do a fake init
+    db.initted = false;
+    db.readySubs.length.should.equal(0);
+    let p = db.ready();
+    db.readySubs.length.should.equal(1);
+    db.readySubs.shift().call();
+
+    db.initted = true;
+    db.readySubs.length.should.equal(0);
+    p = db.ready();
+    db.readySubs.length.should.equal(0);
 
     await r.dispose();
   });
