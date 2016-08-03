@@ -47,7 +47,7 @@ describe('apollo-passport-rethinkdbdash', () => {
       };
 
       const db = new RethinkDBDashDriver(r, options);
-      
+
       db.userTableName.should.equal(options.userTableName);
     });
 
@@ -82,7 +82,7 @@ describe('apollo-passport-rethinkdbdash', () => {
         test1: {
           type: 'test',
           id: 'test1',
-          a: 1          
+          a: 1
         }
       }
     });
@@ -165,6 +165,20 @@ describe('apollo-passport-rethinkdbdash', () => {
         await db.users.insert(users).run();
       });
       after(async () => { r.dispose(); });
+
+      describe('fetchUserById', () => {
+
+        it('returns a matching user if one exists', async () => {
+          const user = await db.fetchUserById('sheppard');
+          user.id.should.equal("sheppard");
+        });
+
+        it('returns null on no match', async () => {
+          const user = await db.fetchUserById('todd');
+          should.equal(user, null);
+        });
+
+      });
 
       describe('fetchUserByEmail()', () => {
 

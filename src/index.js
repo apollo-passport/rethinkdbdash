@@ -62,7 +62,7 @@ class RethinkDBDashDriver {
   /*
    * Retrieves _all_ configuration from the database and returns as a nested
    * dictionary arranged by type, i.e.
-   * 
+   *
    *   {
    *     service: {
    *       facebook: { ... data ... }
@@ -112,6 +112,11 @@ class RethinkDBDashDriver {
       id = result.generated_keys[0];
 
     return id;
+  }
+
+  async fetchUserById(userId) {
+    await this.ready();
+    return this.users.get(userId).run();
   }
 
   /*
