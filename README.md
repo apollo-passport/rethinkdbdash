@@ -41,4 +41,4 @@ See [apollo-passport](https://github.com/apollo-passport/apollo-passport) for mo
 
 This package is fully documented with 100% test coverage.  It can be used as a basis for creating other DBDrivers for Apollo Passport.
 
-See also the [API Docs](docs/api/apollo-passport-rethinkdbdash).
+See also the [API Docs](docs/api/apollo-passport-rethinkdbdash), ordered by version and viewable online via rawgit, e.g. [v0.0.2 API Docs on RawGit](https://cdn.rawgit.com/apollo-passport/rethinkdbdash/master/docs/api/apollo-passport-rethinkdbdash/0.0.2/RethinkDBDashDriver.html).
