@@ -25,10 +25,20 @@ const apolloPassport = new ApolloPassport({
 });
 ```
 
-If your `users` table is called something else, pass the name as the 2nd argument:
+**Optional parameters**, e.g. if your `users` table is called something else:
 
 ```js
-new RethinkDBDashDriver(r, 'sheeple');
+new RethinkDBDashDriver(r, {
+  userTableName: 'users',
+  configTableName: 'apolloPassportConfig',
+  db: '(override default database given to rethinkdbdash)'
+});
 ```
 
 See [apollo-passport](https://github.com/apollo-passport/apollo-passport) for more info.
+
+## Create your own DBDriver
+
+This package is fully documented with 100% test coverage.  It can be used as a basis for creating other DBDrivers for Apollo Passport.
+
+See also the [docs/api/apollo-passport-rethinkdbdash][API Docs].

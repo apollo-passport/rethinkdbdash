@@ -1,6 +1,4 @@
 import chai from 'chai';
-import sinon from 'sinon';
-import util from 'util';
 import 'regenerator-runtime/runtime';
 
 import rethinkdbdash from 'rethinkdbdash';
@@ -56,19 +54,18 @@ describe('apollo-passport-rethinkdbdash', () => {
   it('ready()', async () => {
     const r = await disposable();
     const db = new RethinkDBDashDriver(r);
-    const origDbReady = db.ready;
-    await db.ready();
+    await db._ready();
 
     // now do a fake init
     db.initted = false;
     db.readySubs.length.should.equal(0);
-    let p = db.ready();
+    db._ready();
     db.readySubs.length.should.equal(1);
     db.readySubs.shift().call();
 
     db.initted = true;
     db.readySubs.length.should.equal(0);
-    p = db.ready();
+    db._ready();
     db.readySubs.length.should.equal(0);
 
     await r.dispose();
@@ -106,7 +103,7 @@ describe('apollo-passport-rethinkdbdash', () => {
 
       it('inserts a user and returns the id when no id given', async () => {
         const db = new RethinkDBDashDriver(r);
-        await db.ready();
+        await db._ready();
         await db.users.delete({ durability: 'soft' });
 
         const user = { name: 'John Sheppard' };
@@ -123,7 +120,7 @@ describe('apollo-passport-rethinkdbdash', () => {
 
       it('inserts a user and returns the id when an id is given', async () => {
         const db = new RethinkDBDashDriver(r);
-        await db.ready();
+        await db._ready();
         await db.users.delete({ durability: 'soft' });
 
         const user = { id: 'sheppard', name: 'John Sheppard' };
@@ -166,7 +163,7 @@ describe('apollo-passport-rethinkdbdash', () => {
       before(async () => {
         r = await disposable();
         db = new RethinkDBDashDriver(r);
-        await db.ready();
+        await db._ready();
         await db.users.insert(users).run();
       });
       after(async () => { r.dispose(); });
