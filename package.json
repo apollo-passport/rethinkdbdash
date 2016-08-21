@@ -24,7 +24,9 @@
     "passport",
     "auth",
     "authentication",
-    "rethinkdbdash"
+    "rethinkdbdash",
+    "rethinkdb",
+    "apollo-passport-database-driver"
   ],
   "author": "Gadi Cohen",
   "license": "MIT",

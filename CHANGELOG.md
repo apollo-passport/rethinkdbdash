@@ -5,7 +5,12 @@ We use the format from [keepachangelog.com](keepachangelog.com).
 
 ## [Unreleased]
 
-## [0.0.2] - 2016-08-20
+## [v0.0.3] - 2016-08-21
+
+### Added
+* `apollo-passport-database-driver` keyword in `package.json` (had to republished).
+
+## [v0.0.2] - 2016-08-20
 
 ### Added
 * API documentation, inline via jsdoc.  JSdoc dev dependency and `npm run jsdoc`
@@ -24,4 +29,4 @@ We use the format from [keepachangelog.com](keepachangelog.com).
 * `fetchConfig()` is no longer run from
 
 [Unreleased]: https://github.com/apollo-passport/rethinkdbdash/compare/master...devel
-[0.0.2]: https://github.com/apollo-passport/rethinkdbdash/compare/v0.0.1...v0.0.2
+[v0.0.2]: https://github.com/apollo-passport/rethinkdbdash/compare/v0.0.1...v0.0.2
